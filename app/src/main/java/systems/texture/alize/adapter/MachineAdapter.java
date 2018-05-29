@@ -1,6 +1,8 @@
 package systems.texture.alize.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -36,5 +38,14 @@ public class MachineAdapter extends RecyclerView.Adapter<BindingHolder> {
     @Override
     public int getItemCount() {
         return machineList != null ? machineList.size() : 0;
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+
+        Context context = recyclerView.getContext();
+        recyclerView.setLayoutManager(
+                new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
     }
 }
