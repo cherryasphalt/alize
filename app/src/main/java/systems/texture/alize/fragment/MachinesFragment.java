@@ -13,7 +13,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import systems.texture.alize.R;
-import systems.texture.alize.adapter.AccountAdapter;
 import systems.texture.alize.adapter.MachineAdapter;
 import systems.texture.alize.net.API;
 
@@ -48,7 +47,7 @@ public class MachinesFragment extends Fragment {
 
     private void startMachineListNetworkCall() {
         if (machineSub == null || machineSub.isDisposed())
-            machineSub = API.PaperSpace.getClient(getContext())
+            machineSub = API.PaperSpace.getAuthClient(getContext())
                     .create(API.PaperSpace.MachineService.class)
                     .getMachineList()
                     .subscribeOn(Schedulers.io())
@@ -56,6 +55,8 @@ public class MachinesFragment extends Fragment {
                     .subscribe(list -> {
                         adapter.setMachineList(list);
                         swipeRefreshLayout.setRefreshing(false);
+                    }, error -> {
+                        error.printStackTrace();
                     });
     }
 

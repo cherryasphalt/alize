@@ -11,14 +11,15 @@ import systems.texture.alize.util.SharedPrefUtil;
 
 public class PaperspaceAuthInterceptor implements Interceptor {
     private Context context;
+    private String apiKey;
 
-    public PaperspaceAuthInterceptor(Context context) {
+    public PaperspaceAuthInterceptor(Context context, String apiKey) {
         this.context = context;
+        this.apiKey = apiKey;
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-        String apiKey = SharedPrefUtil.getPaperspaceAPIKey(context);
         Request request = chain.request();
 
         Request.Builder builder = request.newBuilder()

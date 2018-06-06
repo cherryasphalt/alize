@@ -7,6 +7,15 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <!-- Add Account Fragment -->
+    <string name="hint_new_api_key">New API Key</string>
+    <string-array name="entries_account_types">
+        <item>Paperspace</item>
+        <item>Amazon</item>
+        <item>Google Cloud Platform</item>
+    </string-array>
+    <string name="button_add">Add</string>
+
     <!-- content descriptions -->
     <string name="content_desc_machine_brand_icon">Machine Brand Icon</string>
     <string name="content_desc_machine_settings_button">Machine Settings Button</string>
