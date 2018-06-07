@@ -140,7 +140,7 @@ public class User implements Parcelable {
     private int maxRunningJobs;
     @SerializedName("id")
     @Expose
-    private int id;
+    private String id;
     public final static Parcelable.Creator<User> CREATOR = new Creator<User>() {
 
 
@@ -202,7 +202,7 @@ public class User implements Parcelable {
         this.mlPro = ((boolean) in.readValue((boolean.class.getClassLoader())));
         this.maxJobs = ((int) in.readValue((int.class.getClassLoader())));
         this.maxRunningJobs = ((int) in.readValue((int.class.getClassLoader())));
-        this.id = ((int) in.readValue((int.class.getClassLoader())));
+        this.id = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public User() {
@@ -552,11 +552,11 @@ public class User implements Parcelable {
         this.maxRunningJobs = maxRunningJobs;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

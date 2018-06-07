@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import systems.texture.alize.R;
 import systems.texture.alize.adapter.MachineAdapter;
@@ -18,7 +18,7 @@ import systems.texture.alize.net.API;
 
 public class MachinesFragment extends Fragment {
     private MachineAdapter adapter;
-    private Disposable machineSub;
+    private CompositeDisposable apiSubs = new CompositeDisposable();
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public MachinesFragment() {}
@@ -46,24 +46,29 @@ public class MachinesFragment extends Fragment {
     }
 
     private void startMachineListNetworkCall() {
-        if (machineSub == null || machineSub.isDisposed())
-            machineSub = API.PaperSpace.getAuthClient(getContext())
-                    .create(API.PaperSpace.MachineService.class)
-                    .getMachineList()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(list -> {
-                        adapter.setMachineList(list);
-                        swipeRefreshLayout.setRefreshing(false);
-                    }, error -> {
-                        error.printStackTrace();
-                    });
+        apiSubs.add(API.PaperSpace.getAuthClient(getContext())
+            .create(API.PaperSpace.UserService.class)
+            .getUsers()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(userList -> {
+                apiSubs.add(API.PaperSpace.getAuthClient(getContext())
+                        .create(API.PaperSpace.MachineService.class)
+                        .getMachineList()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(list -> {
+                            adapter.addUserAndMachineList(userList.get(0), list);
+                            swipeRefreshLayout.setRefreshing(false);
+                        }, error -> {
+                            error.printStackTrace();
+                        }));
+            }));
     }
 
     @Override
     public void onDestroy() {
-        if (machineSub != null)
-            machineSub.dispose();
+        apiSubs.dispose();
         super.onDestroy();
     }
 }

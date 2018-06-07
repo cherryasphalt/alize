@@ -64,7 +64,7 @@
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="48dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_settings"
+                android:src="@{@drawable/ic_settings}"
                 android:contentDescription="@string/content_desc_machine_settings_button"
                 android:background="?attr/selectableItemBackground"
                 app:layout_constraintTop_toTopOf="parent"
