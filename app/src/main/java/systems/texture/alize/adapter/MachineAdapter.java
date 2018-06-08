@@ -2,6 +2,7 @@ package systems.texture.alize.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,8 +56,9 @@ public class MachineAdapter extends RecyclerView.Adapter<BindingHolder> {
             case TYPE_MACHINE:
                 ItemMachineBinding machineBinding = (ItemMachineBinding) holder.getBinding();
                 machineBinding.buttonMachineSettings.setOnClickListener(view -> {
-                    Toast.makeText(view.getContext(), "test", Toast.LENGTH_LONG).show();
-                    view.getContext().startActivity(new Intent(view.getContext(), MachineDetailActivity.class));
+                    Intent intent = new Intent(view.getContext(), MachineDetailActivity.class);
+                    intent.putExtra("machine", (Machine) mapper.get(position));
+                    view.getContext().startActivity(intent);
                 });
                 machineBinding.setMachine((Machine) mapper.get(position));
                 break;
