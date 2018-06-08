@@ -23,6 +23,7 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import systems.texture.alize.fragment.MachinesFragment;
 import systems.texture.alize.model.common.PaperspaceAccount;
 import systems.texture.alize.net.API;
 import systems.texture.alize.util.SharedPrefUtil;
@@ -42,7 +43,6 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
     }
 
     @OnClick(R.id.fab)
@@ -70,7 +70,9 @@ public class HomeActivity extends AppCompatActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userList -> {
-                    SharedPrefUtil.addPaperspaceAccount(this, new PaperspaceAccount(apiKey, userList.get(0)));
+                    //SharedPrefUtil.addPaperspaceAccount(this, new PaperspaceAccount(apiKey, userList.get(0)));
+                    SharedPrefUtil.setPaperspaceAPIKey(this, apiKey);
+                    ((MachinesFragment) getSupportFragmentManager().findFragmentById(R.id.machines_fragment)).startMachineListNetworkCall();
                 }, error -> {
                     error.printStackTrace();
                 }));

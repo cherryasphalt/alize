@@ -44,10 +44,10 @@ public final class SharedPrefUtil {
         editor.apply();
     }
 
-    public static void setPaperspaceAPIKey(Context context, Login login) {
+    public static void setPaperspaceAPIKey(Context context, String apiKey) {
         SharedPreferences.Editor editor =
                 context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit();
-        editor.putString(PAPERSPACE_API_KEY_KEY, login.getId());
+        editor.putString(PAPERSPACE_API_KEY_KEY, apiKey);
         editor.apply();
     }
 

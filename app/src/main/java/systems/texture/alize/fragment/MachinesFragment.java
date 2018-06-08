@@ -9,12 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 import systems.texture.alize.R;
 import systems.texture.alize.adapter.MachineAdapter;
 import systems.texture.alize.net.API;
+import systems.texture.alize.util.SharedPrefUtil;
 
 public class MachinesFragment extends Fragment {
     private MachineAdapter adapter;
@@ -45,25 +48,26 @@ public class MachinesFragment extends Fragment {
         return swipeRefreshLayout;
     }
 
-    private void startMachineListNetworkCall() {
-        apiSubs.add(API.PaperSpace.getAuthClient(getContext())
-            .create(API.PaperSpace.UserService.class)
-            .getUsers()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(userList -> {
-                apiSubs.add(API.PaperSpace.getAuthClient(getContext())
-                        .create(API.PaperSpace.MachineService.class)
-                        .getMachineList()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(list -> {
-                            adapter.addUserAndMachineList(userList.get(0), list);
-                            swipeRefreshLayout.setRefreshing(false);
-                        }, error -> {
-                            error.printStackTrace();
-                        }));
-            }));
+    public void startMachineListNetworkCall() {
+        boolean isAPIKeyAvailable = !StringUtils.isEmpty(SharedPrefUtil.getPaperspaceAPIKey(getContext()));
+        swipeRefreshLayout.setRefreshing(isAPIKeyAvailable);
+        if (isAPIKeyAvailable)
+            apiSubs.add(API.PaperSpace.getAuthClient(getContext())
+                    .create(API.PaperSpace.UserService.class)
+                    .getUsers()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(userList -> {
+                        apiSubs.add(API.PaperSpace.getAuthClient(getContext())
+                                .create(API.PaperSpace.MachineService.class)
+                                .getMachineList()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(list -> {
+                                    adapter.addUserAndMachineList(userList.get(0), list);
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }, Throwable::printStackTrace));
+                    }));
     }
 
     @Override
